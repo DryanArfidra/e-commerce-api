@@ -5,7 +5,7 @@ export const getAllCategories = async (): Promise<Category[]> => {
     return await prisma.category.findMany();
 };
 
-export const getCategoryById = async (id: number): Promise<Category> => {
+export const getCategoryById = async (id: string): Promise<Category> => {
     const category = await prisma.category.findUnique({
         where: { id },
     });
@@ -25,7 +25,7 @@ export const createCategory = async (data: { name: string }): Promise<Category> 
     });
 };
 
-export const updateCategory = async (id: number, data: Partial<Category>): Promise<Category> => {
+export const updateCategory = async (id: string, data: Partial<Category>): Promise<Category> => {
     await getCategoryById(id); // Cek existance
 
     return await prisma.category.update({
@@ -34,7 +34,7 @@ export const updateCategory = async (id: number, data: Partial<Category>): Promi
     });
 };
 
-export const deleteCategory = async (id: number): Promise<Category> => {
+export const deleteCategory = async (id: string): Promise<Category> => {
     await getCategoryById(id); // Cek existance
 
     return await prisma.category.delete({

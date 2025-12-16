@@ -5,16 +5,20 @@ export const getAllProducts = async (): Promise<Product[]> => {
   return await prisma.product.findMany({
     include: {
       category: true
+    },
+    where: {
+      deletedAt: null,
     }
   });
 };
 
-export const getProductById = async (id: number): Promise<Product> => {
+export const getProductById = async (id: string): Promise<Product> => {
   const product = await prisma.product.findUnique({
-    where: { id },
+    where: { id, deletedAt: null },
     include: {
       category: true
     }
+
   });
   
   if (!product) {
@@ -29,7 +33,7 @@ export const createProduct = async (data: {
   price: number; 
   stock: number;
   description?: string;
-  categoryId: number; // Tambahan field
+  categoryId: string; // Tambahan field
 }) => {
   return await prisma.product.create({
     data: {
@@ -42,7 +46,7 @@ export const createProduct = async (data: {
   });
 };
 
-export const updateProduct = async (id: number, data: Partial<Product>): Promise<Product> => {
+export const updateProduct = async (id: string, data: Partial<Product>): Promise<Product> => {
   await getProductById(id); // Cek existance
 
   return await prisma.product.update({
@@ -51,11 +55,14 @@ export const updateProduct = async (id: number, data: Partial<Product>): Promise
   });
 };
 
-export const deleteProduct = async (id: number): Promise<Product> => {
+export const deleteProduct = async (id: string): Promise<Product> => {
   await getProductById(id); // Cek existance
 
-  return await prisma.product.delete({
+  return await prisma.product.update({
     where: { id },
+    data: {
+      deletedAt : new Date(),
+    },
   });
 };
 

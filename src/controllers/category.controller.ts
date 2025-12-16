@@ -9,7 +9,7 @@ export const getAllCategories = asyncHandler(async (_req: Request, res: Response
 });
 
 export const getCategoryById = asyncHandler(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = req.params.id!;
   const category = await categoryService.getCategoryById(id);
   return successResponse(res, 'Kategori ditemukan', category);
 });
@@ -20,13 +20,13 @@ export const createCategory = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = req.params.id!;
   const category = await categoryService.updateCategory(id, req.body);
   return successResponse(res, 'Kategori berhasil diupdate', category);
 });
 
 export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = req.params.id!;
   const category = await categoryService.deleteCategory(id);
   return successResponse(res, 'Kategori berhasil dihapus', category);
 });

@@ -12,14 +12,15 @@ import {
   createUserValidation,
   getUserByIdValidation
 } from '../middlewares/user.validation';
+import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.get('/users', getAllUsers);
-router.get('/users/search', searchUsers); 
-router.get('/users/:id', validate(getUserByIdValidation), getUserById);
-router.post('/users', validate(createUserValidation), createUser);
-router.put('/users/:id', validate(createUserValidation), updateUser);
-router.delete('/users/:id', validate(getUserByIdValidation), deleteUser);
+router.get('/users', getAllUsers, authenticate);
+router.get('/users/search', searchUsers, authenticate); 
+router.get('/users/:id', validate(getUserByIdValidation), getUserById, authenticate);
+router.post('/users', validate(createUserValidation), createUser, authenticate);
+router.put('/users/:id', validate(createUserValidation), updateUser, authenticate);
+router.delete('/users/:id', validate(getUserByIdValidation), deleteUser, authenticate);
 
 export default router;

@@ -8,6 +8,8 @@ import categoryRoutes from './routes/category.route';
 import storeRoutes from './routes/store.route'
 import userRoutes from './routes/user.route';
 import transactionRoutes from './routes/transaction.route';
+import authRoutes from './routes/auth.route';
+
 
 const app = express();
 
@@ -37,7 +39,7 @@ app.use('/api/v1', categoryRoutes);
 app.use('/api/v1', storeRoutes);
 app.use('/api/v1', userRoutes);
 app.use('/api/v1', transactionRoutes);
-
+app.use('/api/v1', authRoutes);
 
 
 

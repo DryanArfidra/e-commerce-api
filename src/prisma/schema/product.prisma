@@ -4,7 +4,7 @@ model Product {
   description String?
   price       Decimal  @db.Decimal(10, 2)
   stock       Int      @default(0)
-  
+  image      String?
   // === TAMBAHAN RELASI ===
   categoryId  String? @db.Uuid
   storeId     String? @db.Uuid  

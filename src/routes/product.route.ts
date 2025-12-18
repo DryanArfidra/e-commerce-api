@@ -9,17 +9,19 @@ import {
 } from '../controllers/product.controller';
 import { authenticate } from '../middlewares/auth.middleware';
 import { validate } from '../utils/validate';
-import {  
-  createProductValidation, 
-  getProductByIdValidation 
+import { upload } from '../middlewares/upload.middleware';
+import {
+  createProductValidation,
+  getProductByIdValidation
 } from '../middlewares/product.validation';
 
 const router = Router();
 
-router.get('/products', getAllProducts, authenticate);
-router.get('/products/search', searchProducts, authenticate); // Route search harus sebelum :id
-router.get('/products/:id', validate(getProductByIdValidation), getProductById, authenticate);
-router.post('/products', validate(createProductValidation), createProduct, authenticate);
-router.put('/products/:id', validate(createProductValidation), updateProduct, authenticate);
-router.delete('/products/:id', validate(getProductByIdValidation), deleteProduct, authenticate);
+router.get('/products', authenticate, getAllProducts);
+router.get('/products/search', authenticate, searchProducts); // Route search harus sebelum :id
+router.get('/products/:id', authenticate, validate(getProductByIdValidation), getProductById);
+router.post('/products', authenticate, upload.single('image'), validate(createProductValidation), createProduct);
+router.put('/products/:id', authenticate, upload.single('image'), validate(createProductValidation), updateProduct);
+router.delete('/products/:id', authenticate, validate(getProductByIdValidation), deleteProduct);
+
 export default router;

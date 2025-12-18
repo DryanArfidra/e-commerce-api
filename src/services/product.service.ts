@@ -13,7 +13,7 @@ export const getAllProducts = async (): Promise<Product[]> => {
 };
 
 export const getProductById = async (id: string): Promise<Product> => {
-  const product = await prisma.product.findUnique({
+  const product = await prisma.product.findFirst({
     where: { id, deletedAt: null },
     include: {
       category: true
@@ -32,16 +32,19 @@ export const createProduct = async (data: {
   name: string; 
   price: number; 
   stock: number;
-  description?: string;
-  categoryId: string; // Tambahan field
-}) => {
+  description?: string; 
+  categoryId: string; 
+  image?: string;
+
+}): Promise<Product> => {
   return await prisma.product.create({
     data: {
       name: data.name,
+      description: data.description ?? null,
       price: data.price,
       stock: data.stock,
-      description: data.description ?? null,
-      categoryId: data.categoryId 
+      categoryId: data.categoryId,
+      image: data.image ?? null,
     },
   });
 };

@@ -1,6 +1,53 @@
 import  prisma  from '../prisma';
 import type { Product } from '../generated/client';
 
+interface FindAllParams {
+  page: number;
+  limit: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export const findAllProducts = async (params: FindAllParams) => {
+  const { page, limit, search, sortBy, sortOrder } = params;
+  
+  const skip = (page - 1) * limit;
+
+  // 1. Buat Filter (Where Clause)
+  const whereClause: any = {
+    deletedAt: null // Selalu filter yang belum dihapus (soft delete)
+  };
+
+  if (search) {
+    whereClause.name = { contains: search, mode: 'insensitive' };
+  }
+
+  // 2. Ambil Data dengan Pagination & Sorting
+  const products = await prisma.product.findMany({
+    skip: skip,
+    take: limit,
+    where: whereClause,
+    // Gunakan array untuk orderBy agar dinamis
+    orderBy: sortBy ? { [sortBy]: sortOrder || 'desc' } : { createdAt: 'desc' },
+    include: {
+      category: true 
+    }
+  });
+
+  // 3. Hitung Total Data (untuk metadata pagination)
+  const totalItems = await prisma.product.count({
+    where: whereClause
+  });
+
+  return {
+    products,
+    totalItems,
+    totalPages: Math.ceil(totalItems / limit),
+    currentPage: page
+  };
+};
+
 export const getAllProducts = async (): Promise<Product[]> => {
   return await prisma.product.findMany({
     include: {
